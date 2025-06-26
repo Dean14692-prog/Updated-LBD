@@ -34,13 +34,15 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    # image_url = db.Column(db.String) 
 
     business_profiles = db.relationship('BusinessProfile', back_populates='category')
 
     def to_dict(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            # "image_url": self.image_url 
         }
 
     def __repr__(self):
@@ -55,6 +57,7 @@ class BusinessProfile(db.Model):
     email = db.Column(db.String, unique=True, nullable=False)
     location = db.Column(db.String)
     description = db.Column(db.Text)
+    image_url = db.Column(db.String)
 
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -72,8 +75,12 @@ class BusinessProfile(db.Model):
             "location": self.location,
             "description": self.description,
             "category": self.category.to_dict() if self.category else None,
-            "reviews": [review.to_dict() for review in self.reviews]
+            "reviews": [review.to_dict() for review in self.reviews],
+            "image_url": self.image_url
         }
+
+
+    
 
     def __repr__(self):
         return f"<BusinessProfile id={self.id} name={self.name} email={self.email}>"

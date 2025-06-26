@@ -45,7 +45,7 @@ class UserResource(Resource):
             db.session.commit()
             return make_response(new_user.to_dict(), 201)
         except Exception as e:
-            return make_response({"message": "Error creating user", "error": str(e)}, 500)
+            return make_response({"message": "User already exist, please login", "error": str(e)}, 500)
 
 api.add_resource(UserResource, '/users')
 
@@ -82,6 +82,23 @@ class UserByIdResource(Resource):
         return make_response({"message": "User deleted successfully"}, 200)
 
 api.add_resource(UserByIdResource, '/users/<int:user_id>')
+
+class CategoriesResource(Resource):
+    def get(self):
+        categories = Category.query.all()
+        return make_response([cat.to_dict() for cat in categories], 200)
+
+api.add_resource(CategoriesResource, '/categories')
+
+
+class BusinessProfilesResource(Resource):
+    def get(self):
+        business_profiles = BusinessProfile.query.all()
+        return make_response([bp.to_dict() for bp in business_profiles], 200)
+api.add_resource(BusinessProfilesResource, '/business_profiles')
+
+
+
 
 # -------------------- MAIN --------------------
 if __name__ == '__main__':

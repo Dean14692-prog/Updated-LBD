@@ -153,7 +153,7 @@ const SignupForm = ({ isDark }) => {
                   margin="normal"
                   size="small"
                   id="role"
-                  label="Role"
+                  // label="Role"
                   variant="outlined"
                   select
                   value={formData.role}
@@ -161,7 +161,7 @@ const SignupForm = ({ isDark }) => {
                   SelectProps={{ native: true }}
                   required
                 >
-                  {/* <option value="">Select a role</option> */}
+                  <option value="">Select a role</option>
                   {/* 123 */}
                   <option value="consumer">Consumer</option>
                   <option value="business_owner">Business Owner</option>

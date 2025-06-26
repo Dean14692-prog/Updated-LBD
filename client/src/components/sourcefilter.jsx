@@ -1,145 +1,219 @@
+// // src/components/SourceFilter.js
+// import React, { useState, useEffect } from "react";
+
+// const API_URL = "http://localhost:5555/business_profiles";
+
+// const SourceFilter = () => {
+//   const [businessProfiles, setBusinessProfiles] = useState([]);
+//   const [selectedLocation, setSelectedLocation] = useState("");
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     fetch(API_URL)
+//       .then((res) => res.json())
+//       .then((data) => setBusinessProfiles(data))
+//       .catch((err) => console.error("Error fetching businesses:", err))
+//       .finally(() => setLoading(false));
+//   }, []);
+
+//   const locations = [...new Set(businessProfiles.map((b) => b.location))];
+
+//   const filtered = businessProfiles.filter(
+//     (b) => !selectedLocation || b.location === selectedLocation
+//   );
+
+//   return (
+//     <div className="p-6 bg-slate-100 min-h-screen">
+//       <h2 className="text-3xl font-bold text-center mb-6">
+//         Browse by Location
+//       </h2>
+
+//       <div className="flex flex-wrap justify-center gap-2 mb-6">
+//         <button
+//           onClick={() => setSelectedLocation("")}
+//           className={`px-4 py-2 rounded-full ${
+//             !selectedLocation
+//               ? "bg-blue-600 text-white"
+//               : "bg-blue-100 text-blue-700"
+//           } hover:bg-blue-200`}
+//         >
+//           All Locations
+//         </button>
+//         {locations.map((loc, i) => (
+//           <button
+//             key={i}
+//             onClick={() => setSelectedLocation(loc)}
+//             className={`px-4 py-2 rounded-full ${
+//               selectedLocation === loc
+//                 ? "bg-blue-600 text-white"
+//                 : "bg-blue-100 text-blue-700"
+//             } hover:bg-blue-200`}
+//           >
+//             {loc}
+//           </button>
+//         ))}
+//       </div>
+
+//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+//         {loading ? (
+//           <p className="text-center text-gray-500">Loading businesses…</p>
+//         ) : filtered.length ? (
+//           filtered.map((biz) => (
+//             <div
+//               key={biz.id}
+//               className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition"
+//             >
+//               <img
+//                 src={
+//                   biz.image ||
+//                   "https://via.placeholder.com/400x200?text=Business"
+//                 }
+//                 alt={biz.name}
+//                 className="w-full h-48 object-cover"
+//               />
+//               <div className="p-4">
+//                 <h3 className="font-bold text-lg mb-1">{biz.name}</h3>
+//                 <p className="text-sm text-gray-500 mb-1">{biz.location}</p>
+//                 {biz.category?.name && (
+//                   <p className="text-sm text-gray-600 mb-1">
+//                     Category: {biz.category.name}
+//                   </p>
+//                 )}
+//                 <p className="text-gray-700 text-sm line-clamp-3 mb-1">
+//                   {biz.description}
+//                 </p>
+//                 {biz.owner?.fullname && (
+//                   <p className="text-sm text-gray-600">
+//                     Owner: {biz.owner.fullname}
+//                   </p>
+//                 )}
+//                 {biz.reviews?.length > 0 && (
+//                   <p className="text-sm text-green-600 mt-2">
+//                     ⭐ {biz.reviews.length} review
+//                     {biz.reviews.length > 1 ? "s" : ""}
+//                   </p>
+//                 )}
+//                 {biz.url && (
+//                   <a
+//                     href={biz.url}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     className="text-blue-600 font-semibold hover:underline mt-3 inline-block"
+//                   >
+//                     Visit Business
+//                   </a>
+//                 )}
+//               </div>
+//             </div>
+//           ))
+//         ) : (
+//           <p className="text-center text-gray-500">No businesses found.</p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default SourceFilter;
+
 import React, { useState, useEffect } from "react";
 
-// const API_URL = "http://localhost:5000/businesses"; // your backend
+const API_URL = "http://localhost:5555/business_profiles";
 
 const SourceFilter = () => {
-  const [businesses, setBusinesses] = useState([]);
-  const [selectedCounty, setSelectedCounty] = useState("");
+  const [businessProfiles, setBusinessProfiles] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBusinesses = async () => {
-      try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        setBusinesses(data);
-      } catch (error) {
-        console.error("Error fetching businesses:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBusinesses();
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Fetched business profiles:", data);
+        setBusinessProfiles(data);
+      })
+      .catch((err) => console.error("Error fetching businesses:", err))
+      .finally(() => setLoading(false));
   }, []);
 
-  const counties = [...new Set(businesses.map((b) => b.county))];
+  const locations = [...new Set(businessProfiles.map((b) => b.location))];
 
-  const locations =
-    selectedCounty !== ""
-      ? [
-          ...new Set(
-            businesses
-              .filter((b) => b.county === selectedCounty)
-              .map((b) => b.location)
-          ),
-        ]
-      : [];
-
-  const filteredBusinesses = businesses.filter((b) => {
-    const matchCounty = selectedCounty === "" || b.county === selectedCounty;
-    const matchLocation =
-      selectedLocation === "" || b.location === selectedLocation;
-    return matchCounty && matchLocation;
-  });
+  const filtered = businessProfiles.filter(
+    (b) => !selectedLocation || b.location === selectedLocation
+  );
 
   return (
     <div className="p-6 bg-slate-100 min-h-screen">
       <h2 className="text-3xl font-bold text-center mb-6">
-        Browse Businesses by County & Location
+        Browse by Location
       </h2>
 
-      {/* County filter */}
-      <div className="flex flex-wrap justify-center gap-2 mb-4">
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
         <button
-          onClick={() => {
-            setSelectedCounty("");
-            setSelectedLocation("");
-          }}
+          onClick={() => setSelectedLocation("")}
           className={`px-4 py-2 rounded-full ${
-            selectedCounty === ""
+            !selectedLocation
               ? "bg-blue-600 text-white"
               : "bg-blue-100 text-blue-700"
-          } hover:bg-blue-200 transition text-sm font-medium`}
+          } hover:bg-blue-200`}
         >
-          All Counties
+          All Locations
         </button>
-        {counties.map((county, index) => (
+        {locations.map((loc, i) => (
           <button
-            key={index}
-            onClick={() => {
-              setSelectedCounty(county);
-              setSelectedLocation("");
-            }}
+            key={i}
+            onClick={() => setSelectedLocation(loc)}
             className={`px-4 py-2 rounded-full ${
-              selectedCounty === county
+              selectedLocation === loc
                 ? "bg-blue-600 text-white"
                 : "bg-blue-100 text-blue-700"
-            } hover:bg-blue-200 transition text-sm font-medium`}
+            } hover:bg-blue-200`}
           >
-            {county}
+            {loc}
           </button>
         ))}
       </div>
 
-      {/* Location filter */}
-      {selectedCounty && (
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
-          <button
-            onClick={() => setSelectedLocation("")}
-            className={`px-4 py-2 rounded-full ${
-              selectedLocation === ""
-                ? "bg-green-600 text-white"
-                : "bg-green-100 text-green-700"
-            } hover:bg-green-200 transition text-sm font-medium`}
-          >
-            All Locations
-          </button>
-          {locations.map((location, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedLocation(location)}
-              className={`px-4 py-2 rounded-full ${
-                selectedLocation === location
-                  ? "bg-green-600 text-white"
-                  : "bg-green-100 text-green-700"
-              } hover:bg-green-200 transition text-sm font-medium`}
-            >
-              {location}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Business cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          <p className="text-center col-span-full text-gray-500">
-            Loading businesses...
-          </p>
-        ) : filteredBusinesses.length > 0 ? (
-          filteredBusinesses.map((biz, index) => (
+          <p className="text-center text-gray-500">Loading businesses…</p>
+        ) : filtered.length ? (
+          filtered.map((biz) => (
             <div
-              key={index}
-              className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition"
+              key={biz.id}
+              className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition"
             >
               <img
                 src={
-                  biz.image ||
+                  biz.image_url ||
                   "https://via.placeholder.com/400x200?text=Business"
                 }
                 alt={biz.name}
                 className="w-full h-48 object-cover"
               />
+
               <div className="p-4">
                 <h3 className="font-bold text-lg mb-1">{biz.name}</h3>
-                <p className="text-sm text-gray-500 mb-1">
-                  {biz.county} - {biz.location}
-                </p>
-                <p className="text-gray-700 text-sm line-clamp-3">
+                <p className="text-sm text-gray-500 mb-1">{biz.location}</p>
+                {biz.category?.name && (
+                  <p className="text-sm text-gray-600 mb-1">
+                    Category: {biz.category.name}
+                  </p>
+                )}
+                <p className="text-gray-700 text-sm line-clamp-3 mb-1">
                   {biz.description}
                 </p>
+                {biz.owner?.fullname && (
+                  <p className="text-sm text-gray-600">
+                    Owner: {biz.owner.fullname}
+                  </p>
+                )}
+                {biz.reviews?.length > 0 && (
+                  <p className="text-sm text-green-600 mt-2">
+                    ⭐ {biz.reviews.length} review
+                    {biz.reviews.length > 1 ? "s" : ""}
+                  </p>
+                )}
                 {biz.url && (
                   <a
                     href={biz.url}
@@ -154,9 +228,7 @@ const SourceFilter = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 col-span-full">
-            No businesses found for this filter.
-          </p>
+          <p className="text-center text-gray-500">No businesses found.</p>
         )}
       </div>
     </div>
@@ -164,3 +236,4 @@ const SourceFilter = () => {
 };
 
 export default SourceFilter;
+
