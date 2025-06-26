@@ -85,13 +85,6 @@ const LandingPage = () => {
             </p>
           </div>
         </div>
-
-        {/* See More */}
-        {/* <div className="mt-8">
-          <a href="#" className="text-green-600 font-semibold hover:underline">
-            See More →
-          </a>
-        </div> */}
       </section>
     </div>
   );

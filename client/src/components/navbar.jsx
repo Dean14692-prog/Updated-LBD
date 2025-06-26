@@ -26,18 +26,7 @@ const Navbar = ({ isDark, toggleTheme }) => {
           </Link>
         </li>
 
-        {/* Hoverable Dropdown - Categories */}
-        {/* <li className="relative group">
-          <span className="cursor-pointer">Categories</span>
-          <div className="absolute hidden group-hover:flex flex-col bg-white text-black shadow-lg rounded-md p-2 mt-2 z-10 w-40">
-            <Link to="/web" className="hover:bg-gray-100 px-3 py-2 rounded">
-              E-Commerce
-            </Link>
-            <Link to="/mobile" className="hover:bg-gray-100 px-3 py-2 rounded">
-              Physical Shops
-            </Link>
-          </div>
-        </li> */}
+
 
         <li>
           <Link to="/category" className="hover:underline">
@@ -58,31 +47,6 @@ const Navbar = ({ isDark, toggleTheme }) => {
           </Link>
         </li>
 
-        {/* Search Field */}
-        {/* <li>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className={`px-4 py-2 rounded-full border outline-none focus:ring ${
-                isDark
-                  ? "bg-gray-800 text-white border-gray-700 focus:ring-gray-600"
-                  : "bg-gray-100 text-black border-gray-300 focus:ring-blue-400"
-              }`}
-            />
-            <span className="absolute right-3 top-2.5 text-gray-500">🔍</span>
-          </div>
-        </li> */}
-
-        {/* Theme Toggle */}
-        <li>
-          <button
-            onClick={toggleTheme}
-            className="border rounded-full px-4 py-1 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-          >
-            {isDark ? "☀️ Light" : "🌙 Dark"}
-          </button>
-        </li>
       </ul>
     </nav>
   );

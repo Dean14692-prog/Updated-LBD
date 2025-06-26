@@ -9,7 +9,7 @@ def run_seeds():
         db.drop_all()
         db.create_all()
 
-        # -------------------- CATEGORIES --------------------
+
         category_data = [
             {"name": "Cafe", "image_url": "https://images.unsplash.com/photo-1509042239860-f550ce710b93"},
             {"name": "Repair", "image_url": "https://t4.ftcdn.net/jpg/04/10/31/07/360_F_410310701_irVZAyvCWWYCiYDdvrF0wLEhjOCsXCb5.jpg"},
@@ -26,7 +26,7 @@ def run_seeds():
         db.session.add_all(categories)
         db.session.commit()
 
-        # -------------------- USERS --------------------
+
         users = [
             User(
                 fullname="Dennis Mutuku",
@@ -56,7 +56,7 @@ def run_seeds():
         db.session.add_all(users)
         db.session.commit()
 
-        # -------------------- BUSINESS PROFILES --------------------
+
         owner_1 = User.query.filter_by(fullname="Ali Mwangi").first()
         owner_2 = User.query.filter_by(fullname="Mary Otieno").first()
 
@@ -165,7 +165,7 @@ def run_seeds():
         db.session.add_all(businesses)
         db.session.commit()
 
-        # -------------------- REVIEWS --------------------
+
         reviews = [
             Review(
                 user_id=User.query.filter_by(fullname="Dennis Mutuku").first().id,
