@@ -52,9 +52,9 @@ const Footer = () => {
               className="group relative px-3 py-1.5 rounded-lg transition-all duration-300 hover:text-white hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-400/15 hover:shadow-md hover:shadow-green-400/30 cursor-pointer"
             >
 
-              <Link to="/policy" className="hover">
+              {/* <Link to="/policy" className="hover">
                 Privacy Policy
-              </Link>
+              </Link> */}
             </div>
           </div>
 
