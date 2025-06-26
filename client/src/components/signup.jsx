@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 import TextField from "@mui/material/TextField";
-import "./signup.css";
-import Navbar from "./navbar";
+import MenuItem from "@mui/material/MenuItem";
+import { Link } from "react-router-dom";
+import Button from "@mui/material/Button";
 
-const SignupForm = ({ isDark }) => {
-  const [isSignup, setIsSignup] = useState(true);
+const SignupForm = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -12,46 +13,45 @@ const SignupForm = ({ isDark }) => {
     confirmpassword: "",
     role: "",
   });
-  const [popupMessage, setPopupMessage] = useState(null);
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
+    const key = e.target.id || e.target.name;
+    const value = e.target.value;
     setFormData((prev) => ({
       ...prev,
-      [id]: value,
+      [key]: value,
     }));
   };
 
-  const showPopup = (text, type = "success") => {
-    setPopupMessage({ text, type });
-    setTimeout(() => setPopupMessage(null), 5000);
-  };
-
   const validateForm = () => {
-    if (isSignup) {
-      if (formData.password !== formData.confirmpassword) {
-        showPopup("Passwords do not match", "error");
-        return false;
-      }
-      if (formData.password.length < 6) {
-        showPopup("Password must be at least 6 characters", "error");
-        return false;
-      }
-      if (!formData.role) {
-        showPopup("Please select a role", "error");
-        return false;
-      }
+    const { fullname, email, password, confirmpassword, role } = formData;
+    if (!fullname || !email || !password || !confirmpassword || !role) {
+      setError("All fields are required.");
+      return false;
     }
-    if (!formData.email.includes("@")) {
-      showPopup("Please enter a valid email", "error");
+    if (!email.includes("@")) {
+      setError("Please enter a valid email.");
+      return false;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return false;
+    }
+    if (password !== confirmpassword) {
+      setError("Passwords do not match.");
       return false;
     }
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
     setIsLoading(true);
 
     if (!validateForm()) {
@@ -60,30 +60,16 @@ const SignupForm = ({ isDark }) => {
     }
 
     const { fullname, email, password, role } = formData;
-    const endpoint = isSignup ? "signup" : "login";
 
     try {
-      const response = await fetch(`http://127.0.0.1:5555/users`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullname, email, password, role }),
+      await axios.post("http://localhost:5555/users", {
+        fullname,
+        email,
+        password,
+        role,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
-      showPopup(
-        isSignup ? "Account created successfully!" : "Login successful!",
-        "success"
-      );
-
-      if (isSignup) {
-        setIsSignup(false);
-      }
-
+      setSuccess("Account created! You can now log in.");
       setFormData({
         fullname: "",
         email: "",
@@ -91,136 +77,133 @@ const SignupForm = ({ isDark }) => {
         confirmpassword: "",
         role: "",
       });
-    } catch (error) {
-      console.error(`${isSignup ? "Signup" : "Login"} error:`, error);
-      showPopup(
-        error.message ||
-          `${isSignup ? "Signup" : "Login"} failed. Please try again.`,
-        "error"
-      );
+    } catch (err) {
+      setError(err.response?.data?.message || "Signup failed");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div>
-      <Navbar />
-      <div className={`signup-page ${isDark ? "dark-bg" : ""}`}>
-        <div className={`form-container ${isDark ? "dark" : ""}`}>
-          <h2 className="form-title">
-            {isSignup ? "Create Account" : "Welcome Back"}
-          </h2>
-          <p className="form-subtitle">
-            {isSignup ? "Join us today" : "Login to your account"}
-          </p>
+    <div
+      className="relative min-h-screen bg-gradient-to-br from-green-100 via-green-300 to-green-500 flex items-center justify-center px-4 py-8 border shadow"
+      style={{ width: "1200px" }}
+    >
+      {/* Top Left Home Link */}
+      <div className="absolute top-4 left-4 z-50">
+        <Link to="/">
+          <Button
+            variant="text"
+            size="small"
+            sx={{
+              textTransform: "none",
+              fontWeight: "bold",
 
-          <div className="form-tabs">
-            <button
-              type="button"
-              className={`form-tab ${!isSignup ? "active" : ""}`}
-              onClick={() => setIsSignup(false)}
-            >
-              Login
-            </button>
-            <button
-              type="button"
-              className={`form-tab ${isSignup ? "active" : ""}`}
-              onClick={() => setIsSignup(true)}
-            >
-              Sign Up
-            </button>
+              "&:hover": {
+                color: "black",
+                borderColor: "white",
+              },
+            }}
+          >
+            Home
+          </Button>
+        </Link>
+      </div>
+      <div className="w-full max-w-xl bg-white/80 backdrop-blur-md shadow-2xl rounded-3xl px-10 py-12 space-y-6">
+        <h2 className="text-3xl font-extrabold text-center text-gray-800 tracking-tight">
+          Create an Account
+        </h2>
+
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {success && (
+          <p className="text-green-600 text-sm text-center">{success}</p>
+        )}
+
+        <form onSubmit={handleSignup}>
+          <div className="mb-2">
+            <TextField
+              id="fullname"
+              label="Full Name"
+              fullWidth
+              size="small"
+              // variant="outlined"
+              value={formData.fullname}
+              onChange={handleChange}
+            />
           </div>
 
-          <form className="form" onSubmit={handleSubmit}>
-            {isSignup && (
-              <>
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  id="fullname"
-                  label="Full Name"
-                  variant="outlined"
-                  type="text"
-                  required
-                  value={formData.fullname}
-                  onChange={handleChange}
-                />
-
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  size="small"
-                  id="role"
-                  // label="Role"
-                  variant="outlined"
-                  select
-                  value={formData.role}
-                  onChange={handleChange}
-                  SelectProps={{ native: true }}
-                  required
-                >
-                  <option value="">Select a role</option>
-                  {/* 123 */}
-                  <option value="consumer">Consumer</option>
-                  <option value="business_owner">Business Owner</option>
-                </TextField>
-              </>
-            )}
-
+          <div className="mb-2">
             <TextField
-              fullWidth
-              margin="normal"
-              size="small"
               id="email"
               label="Email Address"
-              variant="outlined"
+              fullWidth
+              size="small"
+              // variant="outlined"
               type="email"
-              required
               value={formData.email}
               onChange={handleChange}
             />
+          </div>
 
+          <div className="mb-2">
             <TextField
-              fullWidth
-              margin="normal"
-              size="small"
               id="password"
               label="Password"
-              variant="outlined"
+              fullWidth
+              size="small"
+              // variant="outlined"
               type="password"
-              required
               value={formData.password}
               onChange={handleChange}
             />
+          </div>
 
-            {isSignup && (
-              <TextField
-                fullWidth
-                margin="normal"
-                size="small"
-                id="confirmpassword"
-                label="Confirm Password"
-                variant="outlined"
-                type="password"
-                required
-                value={formData.confirmpassword}
-                onChange={handleChange}
-              />
-            )}
+          <div className="mb-2">
+            <TextField
+              id="confirmpassword"
+              label="Confirm Password"
+              fullWidth
+              size="small"
+              // variant="outlined"
+              type="password"
+              value={formData.confirmpassword}
+              onChange={handleChange}
+            />
+          </div>
 
-            <button className="submit-btn" type="submit" disabled={isLoading}>
-              {isLoading ? "Processing..." : isSignup ? "Sign Up" : "Login"}
-            </button>
-          </form>
+          <div className="mb-2">
+            <TextField
+              id="role"
+              name="role"
+              select
+              label="Select Role"
+              fullWidth
+              size="small"
+              // variant="outlined"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <MenuItem value="">Select a role</MenuItem>
+              <MenuItem value="consumer">Consumer</MenuItem>
+              <MenuItem value="business_owner">Business Owner</MenuItem>
+            </TextField>
+          </div>
 
-          {popupMessage && (
-            <div className={`popup-alert ${popupMessage.type}`}>
-              {popupMessage.text}
-            </div>
-          )}
-        </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-2 text-white bg-green-600 rounded-xl font-semibold hover:bg-green-700 transition duration-200 shadow-md hover:shadow-lg"
+          >
+            {isLoading ? "Processing..." : "Sign Up"}
+          </button>
+        </form>
+
+        <p className="pt-2 text-center text-sm text-gray-700">
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Log In
+          </a>
+        </p>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 // Using div with onClick for demo - replace with your router's Link component
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -27,7 +28,10 @@ const Footer = () => {
               onClick={() => console.log("Navigate to about")}
               className="group relative px-3 py-1.5 rounded-lg transition-all duration-300 hover:text-white hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-400/15 hover:shadow-md hover:shadow-green-400/30 cursor-pointer"
             >
-              <span className="relative z-10 font-medium text-sm">About</span>
+              <Link to="/about" className="hover">
+                About
+              </Link>
+              {/* <span className="relative z-10 font-medium text-sm">About</span> */}
             </div>
 
             <div className="hidden sm:block w-px h-4 bg-gradient-to-b from-green-400/40 via-emerald-300/30 to-green-400/40"></div>
@@ -36,7 +40,10 @@ const Footer = () => {
               onClick={() => console.log("Navigate to contact")}
               className="group relative px-3 py-1.5 rounded-lg transition-all duration-300 hover:text-white hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-400/15 hover:shadow-md hover:shadow-green-400/30 cursor-pointer"
             >
-              <span className="relative z-10 font-medium text-sm">Contact</span>
+              {/* <span className="relative z-10 font-medium text-sm">Contact</span> */}
+              <Link to="/contact" className="hover">
+                Contact
+              </Link>
             </div>
 
             <div className="hidden sm:block w-px h-4 bg-gradient-to-b from-green-400/40 via-emerald-300/30 to-green-400/40"></div>
@@ -45,9 +52,12 @@ const Footer = () => {
               onClick={() => console.log("Navigate to privacy policy")}
               className="group relative px-3 py-1.5 rounded-lg transition-all duration-300 hover:text-white hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-400/15 hover:shadow-md hover:shadow-green-400/30 cursor-pointer"
             >
-              <span className="relative z-10 font-medium text-sm">
+              {/* <span className="relative z-10 font-medium text-sm">
                 Privacy Policy
-              </span>
+              </span> */}
+              <Link to="/policy" className="hover">
+                Privacy Policy
+              </Link>
             </div>
           </div>
 

@@ -150,10 +150,10 @@ const CategoriesPage = () => {
                     {biz.name}
                   </h4>
                   <p className="text-sm text-gray-600 mb-2">
-                    {biz.category?.name || "Uncategorized"}
+                    {biz.category?.name}
                   </p>
                   <p className="text-gray-700 text-sm mb-3">
-                    {biz.description || "No description available."}
+                    {biz.description}
                   </p>
                   {biz.website && (
                     <a
@@ -162,7 +162,7 @@ const CategoriesPage = () => {
                       rel="noopener noreferrer"
                       className="inline-block text-green-600 hover:underline text-sm font-medium"
                     >
-                      Visit Website →
+                      Visit Website 
                     </a>
                   )}
                 </div>
